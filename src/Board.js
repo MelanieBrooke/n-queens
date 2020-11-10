@@ -61,29 +61,52 @@
       );
     },
 
-
-/*
-         _             _     _
-     ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
-    / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
-    \__ \ || (_| | |  | |_  | | | |  __/ | |  __/_
-    |___/\__\__,_|_|   \__| |_| |_|\___|_|  \___(_)
-
- */
-    /*=========================================================================
-    =                 TODO: fill in these Helper Functions                    =
-    =========================================================================*/
-
+    // START HERE-------------------------
     // ROWS - run from left to right
-    // --------------------------------------------------------------
-    //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
+      // Create variable to capture array at the given index from the board
+      let row = this.get(rowIndex);
+      // Create counter variable set at 0
+      let counter = 0;
+      // Iterate over the array
+      // Add each item to the counter variable
+      for (let i = 0; i < row.length; i++) {
+        counter += row[i];
+      }
+      // If counter is greater than 1, return true
+      // Else return false
+      if (counter > 1) {
+        return true;
+      }
+
       return false; // fixme
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
+      // Capture this.attributes object
+      // let board = this.attributes;
+      // Capture this.attributes length
+      // Iterate over the object by length
+      // Use current index to capture the row from this
+      // Create counter for each row
+      // Iterate of the row
+      // Keep track of counter
+      // If ever > 1 return true
+      // Exit loops
+      let n = this.attributes.n;
+
+      for (let i = 0; i < n; i++) {
+        let row = this.get(i);
+        let counter = 0;
+        for (let j = 0; j < row.length; j++) {
+          counter += row[j];
+        }
+        if (counter > 1) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
@@ -146,3 +169,6 @@
   };
 
 }());
+
+
+var board = new Board({n: 5});
