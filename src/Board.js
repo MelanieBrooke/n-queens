@@ -174,7 +174,7 @@
 
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
-    //
+
     // test if a specific major diagonal on this board contains a conflict
 
     // if index of current coordpoint tuple is less than index of coord // point tuple it is being compared to (difference) good
