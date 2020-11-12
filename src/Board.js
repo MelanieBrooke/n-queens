@@ -177,15 +177,73 @@
     //
     // test if a specific major diagonal on this board contains a conflict
 
-    // if index of current coordpoint tuple is less than index of coord point
-    // its compared to
+    // if index of current coordpoint tuple is less than index of coord // point tuple it is being compared to (difference) good
+    // else rearrange them, so that the coortuple that comes from gets
+    // substracted from
 
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      let coordinates = [];
+
+      for (let i = 0; i < this.attributes.n; i++) {
+        let row = this.get(i);
+        for (let j = 0; j < row.length; j++) {
+          let points = [];
+          if (row[j] > 0) {
+            points.push(i, j);
+            coordinates.push(points);
+          }
+        }
+      }
+
+      let compareFrom = [0, majorDiagonalColumnIndexAtFirstRow];
+
+      for (let i = 0; i < coordinates.length; i++) {
+        let compareTo = coordinates[i];
+        let differenceAt0 = compareFrom[0] - compareTo[0];
+        let differenceAt1 = compareFrom[1] - compareTo[1];
+        let bothAreEqual = differenceAt0 === differenceAt1;
+        let bothAreNeg = differenceAt0 < 0 && differenceAt1 < 0;
+
+        if (bothAreEqual && bothAreNeg) {
+          return true;
+        }
+      }
+
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      let coordinates = [];
+
+      for (let i = 0; i < this.attributes.n; i++) {
+        let row = this.get(i);
+        for (let j = 0; j < row.length; j++) {
+          let points = [];
+          if (row[j] > 0) {
+            points.push(i, j);
+            coordinates.push(points);
+          }
+        }
+      }
+
+      for (let i = 0; i < coordinates.length; i++) {
+        let indexOfCompareFrom = i;
+        let compareFrom = coordinates[i];
+        for (let j = 0; j < coordinates.length; j++) {
+          let indexOfCompareTo = j;
+          let compareTo = coordinates[j];
+          let differenceAt0 = compareFrom[0] - compareTo[0];
+          let differenceAt1 = compareFrom[1] - compareTo[1];
+
+          let bothAreEqual = differenceAt0 === differenceAt1;
+          let bothAreNeg = differenceAt0 < 0 && differenceAt1 < 0;
+
+          if (bothAreEqual && bothAreNeg) {
+            return true;
+          }
+        }
+      }
       return false; // fixme
     },
 
@@ -196,11 +254,79 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+      for (let i = 0; i < this.attributes.n; i++) {
+        let row = this.get(i);
+        for (let j = 0; j < row.length; j++) {
+          let points = [];
+          if (row[j] > 0) {
+            points.push(i, j);
+            coordinates.push(points);
+          }
+        }
+      }
+
+      let compareFrom = [0, minorDiagonalColumnIndexAtFirstRow];
+
+      for (let j = 0; j < coordinates.length; j++) {
+        let compareTo = coordinates[j];
+
+        let differenceAt0 = compareFrom[0] - compareTo[0];
+        let differenceAt1 = compareFrom[1] - compareTo[1];
+
+        let bothAreEqual = Math.abs(differenceAt0) === differenceAt1;
+        let lessThan0 = differenceAt0 < 0;
+        let greaterThan0 = differenceAt1 > 0;
+
+        if (bothAreEqual && lessThan0 && greaterThan0) {
+          return true;
+        }
+      }
+
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+      let coordinates = [];
+
+      for (let i = 0; i < this.attributes.n; i++) {
+        let row = this.get(i);
+        for (let j = 0; j < row.length; j++) {
+          let points = [];
+          if (row[j] > 0) {
+            points.push(i, j);
+            coordinates.push(points);
+          }
+        }
+      }
+
+      for (let i = 0; i < coordinates.length; i++) {
+        let indexOfCompareFrom = i;
+        let compareFrom = coordinates[i];
+        for (let j = 0; j < coordinates.length; j++) {
+          let indexOfCompareTo = j;
+          let compareTo = coordinates[j];
+          let differenceAt0;
+          let differenceAt1;
+
+          if (indexOfCompareFrom > indexOfCompareTo) {
+            differenceAt0 = compareTo[0] - compareFrom[0];
+            differenceAt1 = compareTo[1] - compareFrom[1];
+          } else {
+            differenceAt0 = compareFrom[0] - compareTo[0];
+            differenceAt1 = compareFrom[1] - compareTo[1];
+          }
+
+          let bothAreEqual = Math.abs(differenceAt0) === differenceAt1;
+          let lessThan0 = differenceAt0 < 0;
+          let greaterThan0 = differenceAt1 > 0;
+
+          if (bothAreEqual && lessThan0 && greaterThan0) {
+            return true;
+          }
+        }
+      }
+
       return false; // fixme
     }
 
@@ -220,4 +346,4 @@
 }());
 
 
-var board = new Board([[0,0,1],[0,0,0],[0,0,0]]);
+var board = new Board([[0,0,1,0,0],[0,0,0,1,0],[0,0,1,0,1],[0,0,0,0,0],[0,0,0,0,1]]);
