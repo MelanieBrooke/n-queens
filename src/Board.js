@@ -116,13 +116,58 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
+
+    // based on (n)
+    // columnObj = {0: 0, 1: 0, 2: 0};
+
+    // iterate through all rows
+    // at every index, add the value to columnObj[i];
+
+    // if columnObj[colIndex] > 1 then true
+
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      let n = this.attributes.n;
+      let columnObj = {};
+      for (let i = 0; i < n; i++) {
+        columnObj[i] = 0;
+      }
+
+      for (let i = 0; i < n; i++) {
+        let row = this.get(i);
+        for (let j = 0; j < row.length; j++) {
+          columnObj[j] += row[j];
+        }
+      }
+
+      if (columnObj[colIndex] > 1) {
+        return true;
+      }
+
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      let n = this.attributes.n;
+      let columnObj = {};
+      for (let i = 0; i < n; i++) {
+        columnObj[i] = 0;
+      }
+
+      for (let i = 0; i < n; i++) {
+        let row = this.get(i);
+        for (let j = 0; j < row.length; j++) {
+          columnObj[j] += row[j];
+        }
+      }
+
+      for (let col in columnObj) {
+        if (columnObj[col] > 1) {
+          return true;
+        }
+      }
+
+      return false;
     },
 
 
@@ -131,6 +176,10 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
+
+    // if index of current coordpoint tuple is less than index of coord point
+    // its compared to
+
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       return false; // fixme
     },
@@ -171,4 +220,4 @@
 }());
 
 
-var board = new Board({n: 5});
+var board = new Board([[0,0,1],[0,0,0],[0,0,0]]);
