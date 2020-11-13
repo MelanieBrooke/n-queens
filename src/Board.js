@@ -328,11 +328,11 @@
       }
 
       return false; // fixme
-    }
+    },
 
     /*--------------------  End of Helper Functions  ---------------------*/
 
-
+    childNodes = [];
   });
 
   var makeEmptyMatrix = function(n) {
@@ -347,3 +347,4 @@
 
 
 var board = new Board([[0,0,1,0,0],[0,0,0,1,0],[0,0,1,0,1],[0,0,0,0,0],[0,0,0,0,1]]);
+
