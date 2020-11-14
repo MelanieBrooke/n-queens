@@ -13,116 +13,135 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 window.findNRooksSolution = function(n) {
-  var solution = [];
+  var result = [];
   var newBoard = new Board({n: n});
 
-  var searchForSolution = function(board, i, j) {
+  var findSolution = function(board, i, j) {
     board = board;
 
     if (i !== undefined && j !== undefined) {
-      if (!board.hasRowConflictAt(i) && !board.hasColConflictAt(j)) {
+      if (board.hasRowConflictAt(i) || board.hasColConflictAt(j)) {
         return true;
       } else {
         return false;
       }
     }
 
-    for (let i = 0; i < board.attributes.n; i++) {
+
+    for (let i = 0; i < n; i++) {
       let row = board.get(i);
+
       for (let j = 0; j < row.length; j++) {
         row[j] = 1;
-        board.set(i, row);
-        if (!searchForSolution(board, i, j)) {
+        if (findSolution(board, i, j)) {
           row[j] = 0;
-          board.set(i, row);
         }
       }
     }
 
     for (let i = 0; i < board.attributes.n; i++) {
       let row = board.get(i);
-      solution.push(row);
+      result.push(row);
     }
   };
 
-  searchForSolution(newBoard);
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
-};
-
-// return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n) {
-  var result = 0;
-  var rooksBoard = new Board({n: n});
-
-  var placeRook = function(row, column) {
-    if (rooksBoard.hasRowConflictAt(row) || rooksBoard.hasColConflictAt(column)) {
-      return;
-    }
-
-    let currentRow = rooksBoard.get(row);
-
-    currentRow[column] = 1;
-    rooksBoard.set(row, currentRow);
-    // console.log(`Attributes: ${JSON.stringify(rooksBoard.attributes)}, Updated Row: ${currentRow}`);
-
-    if (row === rooksBoard.attributes.n - 1) {
-      if (!rooksBoard.hasAnyRooksConflicts()) {
-        result++;
-      }
-    } else {
-      for (let c = 0; c < rooksBoard.attributes.n; c++) {
-        placeRook(row + 1, c);
-      }
-    }
-
-    currentRow[column] = 0;
-    rooksBoard.set(row, currentRow);
-  };
-
-  for (let c = 0; c < rooksBoard.attributes.n; c++) {
-    placeRook(0, c);
-  }
+  findSolution(newBoard);
 
   return result;
 };
 
+// return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
+window.countNRooksSolutions = function(n) {
+  // var result = 0;
+  // var rooksBoard = new Board({n: n});
+
+  // var placeRook = function(row, column) {
+  //   if (rooksBoard.hasRowConflictAt(row) || rooksBoard.hasColConflictAt(column)) {
+  //     return;
+  //   }
+
+  //   let currentRow = rooksBoard.get(row);
+
+  //   currentRow[column] = 1;
+  //   rooksBoard.set(row, currentRow);
+  //   // console.log(`Attributes: ${JSON.stringify(rooksBoard.attributes)}, Updated Row: ${currentRow}`);
+
+  //   if (row === rooksBoard.attributes.n - 1) {
+  //     if (!rooksBoard.hasAnyRooksConflicts()) {
+  //       result++;
+  //     }
+  //   } else {
+  //     for (let c = 0; c < rooksBoard.attributes.n; c++) {
+  //       placeRook(row + 1, c);
+  //     }
+  //   }
+
+  //   currentRow[column] = 0;
+  //   rooksBoard.set(row, currentRow);
+  // };
+
+  // for (let c = 0; c < rooksBoard.attributes.n; c++) {
+  //   placeRook(0, c);
+  // }
+
+  // return result;
+};
+
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = [];
-  var newBoard = new Board({n: n});
+  var result = [];
+  var bucket = [];
+  var queensBoard = new Board({n: n});
 
-  var searchForSolution = function(board, i, j) {
-    board = board;
+  if (n === 0 || n === 2 || n === 3) {
+    if (n === 0) {
+      let badRow = [0];
+      badRow.n = 0;
+      result.push(badRow);
+      return result;
+    } else {
+      for (let i = 0; i < n; i++) {
+        result.push(queensBoard.get(i));
+      }
 
-    if (i !== undefined && j !== undefined) {
-      if (!board.hasRowConflictAt(i) && !board.hasColConflictAt(j)) {
-        return true;
-      } else {
-        return false;
+      return result;
+    }
+  }
+
+  var placeQueen = function(row, column) {
+    if (queensBoard.hasAnyQueensConflicts()) {
+      return;
+    }
+
+    let currentRow = queensBoard.get(row);
+
+    currentRow[column] = 1;
+    queensBoard.set(row, currentRow);
+    console.log(`Attributes: ${JSON.stringify(queensBoard.attributes)}, Updated Row: ${currentRow}`);
+
+    if (row === queensBoard.attributes.n - 1) {
+      if (!queensBoard.hasAnyQueensConflicts()) {
+        bucket.push(JSON.parse(JSON.stringify(queensBoard.attributes)));
+      }
+    } else {
+      for (let c = 0; c < queensBoard.attributes.n; c++) {
+        placeQueen(row + 1, c);
       }
     }
 
-    for (let i = 0; i < board.attributes.n; i++) {
-      let row = board.get(i);
-      for (let j = 0; j < row.length; j++) {
-        row[j] = 1;
-        board.set(i, row);
-        if (!searchForSolution(board, i, j)) {
-          row[j] = 0;
-          board.set(i, row);
-        }
-      }
-    }
-
-    for (let i = 0; i < board.attributes.n; i++) {
-      let row = board.get(i);
-      solution.push(row);
-    }
+    currentRow[column] = 0;
+    queensBoard.set(row, currentRow);
   };
 
-  searchForSolution(newBoard);
-  return solution;
+  for (let c = 0; c < queensBoard.attributes.n; c++) {
+    placeQueen(0, c);
+  }
+
+  let firstSolution = bucket[0];
+  console.log(bucket);
+  result.push(firstSolution);
+
+  return result;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
@@ -132,7 +151,6 @@ window.countNQueensSolutions = function(n) {
 
   var placeQueen = function(row, column) {
     if (queensBoard.hasAnyQueensConflicts()) {
-      console.log('BASE CASE MET');
       return;
     }
 
@@ -140,7 +158,7 @@ window.countNQueensSolutions = function(n) {
 
     currentRow[column] = 1;
     queensBoard.set(row, currentRow);
-    console.log(`Attributes: ${JSON.stringify(queensBoard.attributes)}, Updated Row: ${currentRow}`);
+    // console.log(`Attributes: ${JSON.stringify(queensBoard.attributes)}, Updated Row: ${currentRow}`);
 
     if (row === queensBoard.attributes.n - 1) {
       if (!queensBoard.hasAnyQueensConflicts()) {
