@@ -331,8 +331,6 @@
     },
 
     /*--------------------  End of Helper Functions  ---------------------*/
-
-    childNodes = [];
   });
 
   var makeEmptyMatrix = function(n) {
